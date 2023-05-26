@@ -1,4 +1,4 @@
-﻿using mantis_tests.model;
+﻿using mantis_tests;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -39,6 +39,33 @@ namespace mantis_tests
         }
 
         [Test]
+        public void ProjectCreationTest2()
+        {
+            ProjectData project = new ProjectData()
+            {
+                Name = app.ProjectManagement.GenerateUniqueName(),
+            };
+
+            app.LoginHelper.Login();
+
+            app.Management.GoToProjectsPage();
+
+            List<ProjectData> projectListOld = app.API.GetAll();
+
+            app.API.CreateProject(project);
+
+            List<ProjectData> projectListNew = app.API.GetAll();
+
+
+            projectListOld.Add(project);
+
+            projectListOld.Sort();
+            projectListNew.Sort();
+
+            Assert.AreEqual(projectListOld, projectListNew);
+        }
+
+        [Test]
         public void ProjectRemovalTest()
         {
             app.LoginHelper.Login();
@@ -60,6 +87,38 @@ namespace mantis_tests
             app.ProjectManagement.Remove(0);
 
             List<ProjectData> projectListNew = app.ProjectManagement.GetAll();
+
+            projectListOld.RemoveAt(0);
+
+            projectListOld.Sort();
+            projectListNew.Sort();
+
+            Assert.AreEqual(projectListOld, projectListNew);
+        }
+
+        [Test]
+        public void ProjectRemovalTest2()
+        {
+            app.LoginHelper.Login();
+
+            app.Management.GoToProjectsPage();
+
+            if (app.API.GetAll().Count == 0)
+            {
+                ProjectData project = new ProjectData()
+                {
+                    Name = app.ProjectManagement.GenerateUniqueName(),
+                };
+
+                //app.ProjectManagement.Create(project);
+                app.API.CreateProject(project);
+            }
+
+            List<ProjectData> projectListOld = app.API.GetAll();
+
+            app.ProjectManagement.Remove(0);
+
+            List<ProjectData> projectListNew = app.API.GetAll();
 
             projectListOld.RemoveAt(0);
 

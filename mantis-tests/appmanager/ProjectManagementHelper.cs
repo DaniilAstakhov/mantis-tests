@@ -1,4 +1,4 @@
-﻿using mantis_tests.model;
+﻿using mantis_tests;
 using System;
 using System.Collections.Generic;
 using System.Linq;
